@@ -1,0 +1,19 @@
+# This is a Databricks asset bundle definition for dataops-intelligence-platform.
+# The Databricks extension requires databricks.yml configuration file.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+
+bundle:
+  name: dataops-intelligence-platform
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://dbc-c93bb198-aa21.cloud.databricks.com
+
+  ## Optionally, there could be 'staging' or 'prod' targets here.
+  #
+  # prod:
+  #   workspace:
+  #     host: https://dbc-c93bb198-aa21.cloud.databricks.com

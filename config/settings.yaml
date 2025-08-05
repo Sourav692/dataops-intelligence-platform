@@ -1,0 +1,121 @@
+# DataOps Intelligence Platform Configuration
+
+# Databricks Configuration
+databricks:
+  workspace_url: "https://your-workspace.cloud.databricks.com"
+  token: "${DATABRICKS_TOKEN}"  # Set via environment variable
+  cluster_id: null  # Optional: specific cluster for processing
+
+# Storage Configuration  
+storage:
+  catalog: "main"
+  schema: "dataops_intelligence"
+  checkpoint_location: "/tmp/dip_checkpoints"
+
+  # Table names (can be customized)
+  jobs_table: "jobs_metadata"
+  runs_table: "job_runs" 
+  metrics_table: "job_metrics"
+  health_table: "job_health"
+  costs_table: "job_costs"
+  alerts_table: "job_alerts"
+  baselines_table: "job_baselines"
+  anomalies_table: "job_anomalies"
+
+# Processing Configuration
+processing:
+  collection_window_days: 30
+  metrics_granularity_minutes: 5 
+  max_concurrent_jobs: 10
+
+  # Health score weights (must sum to 1.0)
+  health_score_weights:
+    success_rate: 0.3
+    performance_stability: 0.25
+    cost_efficiency: 0.2
+    resource_utilization: 0.15
+    trend_analysis: 0.1
+
+  # Anomaly detection
+  anomaly_detection_threshold: 2.0
+  min_runs_for_baseline: 5
+
+# Alerting Configuration
+alerting:
+  enabled: true
+
+  # Alert channels
+  channels:
+    slack:
+      enabled: true
+      webhook_url: "${SLACK_WEBHOOK_URL}"
+      channel: "#dataops-alerts"
+      username: "DataOps Intelligence"
+      icon_emoji: ":warning:"
+
+    email:
+      enabled: true
+      smtp_server: "smtp.gmail.com"
+      smtp_port: 587
+      username: "${EMAIL_USERNAME}"
+      password: "${EMAIL_PASSWORD}"
+      from_address: "dataops@company.com"
+      to_addresses:
+        - "team-dataops@company.com"
+        - "data-engineering@company.com"
+
+    teams:
+      enabled: false
+      webhook_url: "${TEAMS_WEBHOOK_URL}"
+
+    webhook:
+      enabled: false
+      url: "${CUSTOM_WEBHOOK_URL}"
+      headers:
+        "Content-Type": "application/json"
+        "Authorization": "Bearer ${WEBHOOK_TOKEN}"
+
+  # Alert rules
+  rules:
+    job_failure:
+      enabled: true
+      threshold: 1  # Alert on any failure
+      severity: "high"
+      channels: ["slack", "email"]
+
+    health_score_low:
+      enabled: true  
+      threshold: 50  # Health score below 50
+      severity: "medium"
+      channels: ["slack"]
+
+    performance_anomaly:
+      enabled: true
+      threshold: 2.0  # 2 standard deviations
+      severity: "medium" 
+      channels: ["slack"]
+
+    cost_spike:
+      enabled: true
+      threshold: 1.5  # 50% increase in cost
+      severity: "high"
+      channels: ["slack", "email"]
+
+  # Rate limiting
+  rate_limiting:
+    enabled: true
+    max_alerts_per_hour: 10
+    max_alerts_per_day: 50
+    cooldown_minutes: 30
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_path: null  # Log to stdout if null
+  max_file_size_mb: 100
+  backup_count: 5
+
+# Environment-specific overrides
+environment: "development"  # development, staging, production
+debug: false

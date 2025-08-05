@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  dataops-intelligence:
+    build:
+      context: ../..
+      dockerfile: deployment/docker/Dockerfile
+    environment:
+      - DATABRICKS_WORKSPACE_URL=${DATABRICKS_WORKSPACE_URL}
+      - DATABRICKS_ACCESS_TOKEN=${DATABRICKS_ACCESS_TOKEN}
+      - CATALOG_NAME=${CATALOG_NAME:-dataops_intelligence}
+      - SCHEMA_NAME=${SCHEMA_NAME:-monitoring}
+    volumes:
+      - ../../config:/app/config
+      - ../../logs:/app/logs
+    restart: unless-stopped
